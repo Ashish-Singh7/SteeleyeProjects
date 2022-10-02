@@ -1,0 +1,81 @@
+1.Explain what the simple List component does.
+Ans:-Lists are used to display data in an ordered format and mainly used to display menus on websites. In React, Lists can be created in a similar way as we create lists in JavaScript. 
+The List component allows you to display a list of pages or links. You can build the list of links by defining a parent page (and displaying its child pages), manually choosing pages, or defining search criteria.
+
+2.What problems / warnings are there with code?
+Ans:-The problems are:-
+          1.Failed to resolve import "prop-types" from "src/App.jsx"
+           2.The parameter of use state need to interchange.
+           3.Onclick need to convert into function.
+
+3.Please fix, optimize, and/or modify the component as much as you think is necessary.
+Ans:-import React, {  useEffect,memo,useState  } from 'react';
+import PropTypes from 'prop-types';
+
+// Single List Item
+const WrappedSingleListItem = ({
+  index,
+  isSelected,
+  onClickHandler,
+  text,
+}) => {
+  return (
+    <li
+      style={{ backgroundColor: isSelected ? 'green' : 'red'}}
+      function onClick{onClickHandler(index)}
+    >
+      {text}
+    </li>
+  );
+};
+
+WrappedSingleListItem.propTypes = {
+  index: PropTypes.number,
+  isSelected: PropTypes.bool,
+  onClickHandler: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
+};
+
+const SingleListItem = memo(WrappedSingleListItem);
+
+// List Component
+const WrappedListComponent = ({
+  items,
+}) => {
+  const [setSelectedIndex, selectedIndex] = useState();
+
+  useEffect(() => {
+    setSelectedIndex(null);
+  }, [items]);
+
+  const handleClick = index => {
+    setSelectedIndex(index);
+  };
+
+  return (
+    <ul style={{ textAlign: 'left' }}>
+      {items.map((item, index) => (
+        <SingleListItem
+          onClickHandler={() => handleClick(index)}
+          text={item.text}
+          index={index}
+          isSelected={selectedIndex}
+        />
+      ))}
+    </ul>
+  )
+};
+
+WrappedListComponent.propTypes = {
+  items: PropTypes.array(PropTypes.shapeOf({
+    text: PropTypes.string.isRequired,
+  })),
+};
+
+WrappedListComponent.defaultProps = {
+  items: null,
+};
+
+const List = memo(WrappedListComponent);
+
+export default List;
